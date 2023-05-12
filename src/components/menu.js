@@ -2,7 +2,10 @@ import { menuService } from "@/services/menu.Service"
 import { useEffect, useState } from "react"
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image"
+import { addOrder } from "@/store/order/action";
+import { useDispatch } from "react-redux";
 export function Menu () {
+    const dispatch = useDispatch();
     const [menu, setMenu] = useState([])
     const [showItem, setShowItem] = useState(false)
     useEffect(() => {
@@ -28,6 +31,7 @@ export function Menu () {
             price: Number(item.price) + Number(selectedSize),
         }
         console.log(cart)
+        dispatch(addOrder(cart))
     }
     return (
         <div>

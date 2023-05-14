@@ -29,9 +29,11 @@ export function Menu () {
             picture: item.picture,
             name: item.name,
             price: Number(item.price) + Number(selectedSize),
+            total: Number(item.price) + Number(selectedSize)
         }
         console.log(cart)
         dispatch(addOrder(cart))
+        setShowItem(false)
     }
     return (
         <div>

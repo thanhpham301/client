@@ -12,3 +12,16 @@ export const addTotal = (idx, value) => {
         payload: Number(value)
     }
 }
+
+export const delItem = (item) => {
+    return {
+        type: "del_item",
+        payload: item
+    }
+}
+export const setOrders = (item) => {
+    return {
+        type: "SET_ORDERS",
+        payload: item
+    }
+}

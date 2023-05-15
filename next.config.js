@@ -4,6 +4,6 @@ const nextConfig = {
     domains: ['product.hstatic.net', "static.nike.com"],
   },
   reactStrictMode: true,
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -18,11 +18,12 @@ export default function Login() {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message);
       }
-
+      // localStorage.setItem("token", data.jwt);
+      // setToken(data.jwt);
+      console.log(data.user.username);
       setSuccess(true);
     } catch (error) {
       console.error(error);
@@ -31,7 +32,7 @@ export default function Login() {
 
   if (success) {
     // Redirect to the desired page after successful login
-    router.push("/menu");
+    router.push("/");
 
     // Return null to prevent the form from being rendered
     return null;

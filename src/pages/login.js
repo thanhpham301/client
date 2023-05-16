@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { addUser } from "@/store/user/action";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await fetch("http://localhost:8080/api/v1/login", {
         method: "POST",
@@ -21,9 +23,9 @@ export default function Login() {
       if (!response.ok) {
         throw new Error(data.message);
       }
-      // localStorage.setItem("token", data.jwt);
+      localStorage.setItem("token", data.jwt);
       // setToken(data.jwt);
-      console.log(data.user.username);
+      dispatch(addUser(data.user.username));
       setSuccess(true);
     } catch (error) {
       console.error(error);
@@ -80,6 +82,7 @@ export default function Login() {
           >
             Sign In
           </button>
+
           <a
             className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
             href="#"

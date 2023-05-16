@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { menuService } from "@/services/menu.Service";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +9,7 @@ export function Menu() {
   const dispatch = useDispatch();
   const [menu, setMenu] = useState([]);
   const [showItem, setShowItem] = useState(false);
+  const userReducer = useSelector((state) => state.userReducer);
   useEffect(() => {
     menuService().then((res) => {
       const stringtify = JSON.stringify(res);
@@ -24,16 +26,22 @@ export function Menu() {
 
   const handleSubmit = (event, item) => {
     event.preventDefault();
-    const cart = {
-      id: uuidv4(),
-      picture: item.picture,
-      name: item.name,
-      price: Number(item.price) + Number(selectedSize),
-      total: Number(item.price) + Number(selectedSize),
-    };
-    console.log(cart);
-    dispatch(addOrder(cart));
-    setShowItem(false);
+    if (userReducer.user[0] !== 0) {
+      const cart = {
+        id: uuidv4(),
+        username: userReducer.user[0],
+        picture: item.picture,
+        name: item.name,
+        price: Number(item.price) + Number(selectedSize),
+        total: Number(item.price) + Number(selectedSize),
+        completed: false,
+      };
+      console.log(cart);
+      dispatch(addOrder(cart));
+      setShowItem(false);
+    } else {
+      alert("Login Please");
+    }
   };
   return (
     // <div>

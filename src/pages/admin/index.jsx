@@ -4,6 +4,11 @@ import { getOrdersService } from "@/service/getOrders.Service";
 import Image from "next/image";
 import axios from "axios";
 
+import io from "socket.io-client";
+
+const socket = io("ws://localhost:8080");
+
+
 const OrdersPage = () => {
   const [getOrders, setGetOrders] = useState([]);
 
@@ -16,6 +21,16 @@ const OrdersPage = () => {
         ];
       });
     });
+  }, []);
+
+  useEffect(() => {
+    socket.on('orders', (orders) => {
+      setGetOrders(prev => [...orders,...prev]);
+    });
+
+    return () => {
+      socket.off('orders');
+    };
   }, []);
 
   const handleOrderComplete = (orderId) => {
@@ -57,7 +72,7 @@ const OrdersPage = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2">Order ID</th>
+            {/* <th className="px-4 py-2">Order ID</th> */}
             <th className="px-4 py-2">Customer</th>
             <th className="px-4 py-2">Product Name</th>
             <th className="px-4 py-2">Product</th>
@@ -69,7 +84,7 @@ const OrdersPage = () => {
         <tbody>
           {getOrders.map((order) => (
             <tr key={order._id}>
-              <td className="border px-4 py-2">{order._id}</td>
+              {/* <td className="border px-4 py-2">{order._id}</td> */}
               <td className="border px-4 py-2">{order.username}</td>
               <td className="border px-4 py-2">{order.name}</td>
               <td className="border px-4 py-2">

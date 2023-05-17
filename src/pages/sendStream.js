@@ -7,6 +7,11 @@ import { delAll } from "@/store/order/action";
 import { setOrders } from "@/store/order/action";
 import { orderService } from "@/service/orderService";
 import Image from "next/image";
+
+import io from "socket.io-client";
+
+const socket = io("ws://localhost:8080");
+
 export default function SendStream() {
   const dispatch = useDispatch();
   const [showOrderReducer, setShowOrderReducer] = useState([]);
@@ -33,6 +38,7 @@ export default function SendStream() {
   };
   const handleOrder = async () => {
     const res = await orderService(orderReducer.orders);
+    socket.emit("newOrder", orderReducer.orders);
     setShowOrderReducer([]);
     localStorage.setItem("orderReducer", JSON.stringify([]));
     dispatch(setOrders(orderReducer.orders));

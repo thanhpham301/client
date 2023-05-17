@@ -10,7 +10,7 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (username === "admin" && password === "admin") {
+    if (username === "admin@gmail.com" && password === "admin") {
       router.push("/admin");
     } else {
       setError("Invalid username or password");

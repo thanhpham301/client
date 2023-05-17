@@ -26,10 +26,10 @@ export function Menu() {
 
   const handleSubmit = (event, item) => {
     event.preventDefault();
-    if (userReducer.user[0] !== 0) {
+    if (userReducer.user) {
       const cart = {
         id: uuidv4(),
-        username: userReducer.user[0],
+        username: userReducer.user,
         picture: item.picture,
         name: item.name,
         price: Number(item.price) + Number(selectedSize),

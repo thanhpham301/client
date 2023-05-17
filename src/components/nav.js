@@ -44,8 +44,10 @@ export default function Nav() {
         Wrap / Up
       </li>
       <li className="p-[15px]">
-        <FontAwesomeIcon className="mr-[15px]" icon={faClockRotateLeft} />
-        Activity History
+        <Link href="/activity">
+          <FontAwesomeIcon className="mr-[15px]" icon={faClockRotateLeft} />
+          Activity History
+        </Link>
       </li>
       <li className="p-[15px]">
         <FontAwesomeIcon className="mr-[15px]" icon={faRainbow} />

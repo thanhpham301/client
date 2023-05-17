@@ -1,5 +1,5 @@
 const initialState = {
-  user: [],
+  user: null,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -7,7 +7,12 @@ export default function userReducer(state = initialState, action) {
     case "add_user":
       return {
         ...state,
-        user: [...state.user, action.payload],
+        user: action.payload,
+      };
+    case "del_user":
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       return state;

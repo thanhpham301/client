@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { addUser } from "@/store/user/action";
+import { showLogOut } from "@/store/header/action";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,9 +34,13 @@ export default function Login() {
   };
 
   if (success) {
+    if (email === "admin123@gmail.com" && password === "admin200664") {
+      router.push("/admin");
+      dispatch(showLogOut(true));
+    }
     // Redirect to the desired page after successful login
     router.push("/");
-
+    dispatch(showLogOut(true));
     // Return null to prevent the form from being rendered
     return null;
   }

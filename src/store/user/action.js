@@ -4,3 +4,10 @@ export const addUser = (username) => {
     payload: username,
   };
 };
+
+export const delUser = (item) => {
+  return {
+    type: "del_user",
+    payload: item,
+  };
+};

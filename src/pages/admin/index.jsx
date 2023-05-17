@@ -9,73 +9,45 @@ const OrdersPage = () => {
 
   useEffect(() => {
     getOrdersService().then((res) => {
-      setGetOrders(res);
+      setGetOrders(() => {
+        return [
+          ...res.filter((order) => !order.completed),
+          ...res.filter((order) => order.completed),
+        ];
+      });
     });
   }, []);
 
-  // useEffect(() => {
-  //   const savedOrders = localStorage.getItem("orders");
-  //   if (savedOrders) {
-  //     setGetOrders(JSON.parse(savedOrders));
-  //   } else {
-  //     getOrdersService().then((res) => {
-  //       setGetOrders(res);
-  //       localStorage.setItem("orders", JSON.stringify(res));
-  //     });
-  //   }
-  // }, []);
   const handleOrderComplete = (orderId) => {
-    setGetOrders((prevOrders) => {
-      const updatedOrders = prevOrders.map((order) => {
-        if (order._id === orderId) {
-          return {
-            ...order,
-            completed: true,
-          };
-        }
-        return order;
+    axios
+      .patch(`http://localhost:8080/api/v1/update-order/${orderId}`, {
+        completed: true,
+      })
+      .then((response) => {
+        // Update the completed status in the local state
+        setGetOrders((prevOrders) => {
+          const updatedOrders = prevOrders.map((order) => {
+            if (order._id === orderId) {
+              return {
+                ...order,
+                completed: true,
+              };
+            }
+            return order;
+          });
+
+          // Move completed order to the bottom
+          return [
+            ...updatedOrders.filter((order) => !order.completed),
+            ...updatedOrders.filter((order) => order.completed),
+          ];
+        });
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Failed to update order:", error);
       });
-      console.log(updatedOrders);
-      // localStorage.setItem("orders", JSON.stringify(updatedOrders));
-
-      // Move completed order to the bottom
-      return [
-        ...updatedOrders.filter((order) => !order.completed),
-        ...updatedOrders.filter((order) => order.completed),
-      ];
-    });
   };
-
-  // ...
-
-  // const handleOrderComplete = (orderId) => {
-  //   axios
-  //     .patch(`/api/orders/${orderId}`, { completed: true })
-  //     .then((response) => {
-  //       // Update the completed status in the local state
-  //       setGetOrders((prevOrders) => {
-  //         const updatedOrders = prevOrders.map((order) => {
-  //           if (order._id === orderId) {
-  //             return {
-  //               ...order,
-  //               completed: true,
-  //             };
-  //           }
-  //           return order;
-  //         });
-
-  //         // Move completed order to the bottom
-  //         return [
-  //           ...updatedOrders.filter((order) => !order.completed),
-  //           ...updatedOrders.filter((order) => order.completed),
-  //         ];
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       // Handle error
-  //       console.error("Failed to update order:", error);
-  //     });
-  // };
 
   return (
     <div className="container mx-auto p-4">

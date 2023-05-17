@@ -1,8 +1,12 @@
 import { createStore, combineReducers } from "redux";
 import orderReducer from "./order/reducer";
+import userReducer from "./user/reducer";
+import showLogOutReducer from "./header/reducer";
 
 const reducer = combineReducers({
-    orderReducer
-})
+  orderReducer,
+  userReducer,
+  showLogOutReducer,
+});
 
-export const store = createStore(reducer)
+export const store = createStore(reducer);

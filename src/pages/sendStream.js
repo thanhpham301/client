@@ -3,23 +3,24 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addTotal } from "@/store/order/action";
 import { delItem } from "@/store/order/action";
+import { delAll } from "@/store/order/action";
 import { setOrders } from "@/store/order/action";
 import { orderService } from "@/service/orderService";
 import Image from "next/image";
 export default function SendStream() {
   const dispatch = useDispatch();
-  // const [orderReducer, setOrderReducer] = useState([])
+  const [showOrderReducer, setShowOrderReducer] = useState([]);
   const orderReducer = useSelector((state) => state.orderReducer);
   useEffect(() => {
     const orderReducerStorage = localStorage.getItem("orderReducer");
     if (orderReducerStorage) {
-      console.log(JSON.parse(orderReducerStorage));
-      // setOrderReducer(orderReducer)
-      orderReducer.orders = JSON.parse(orderReducerStorage);
+      // setOrderReducer(orderReducer);
+      // orderReducer.orders = JSON.parse(orderReducerStorage);
+      setShowOrderReducer(JSON.parse(orderReducerStorage));
     }
-  }, []);
+  }, [orderReducer]);
   const [selectedOptions, setSelectedOptions] = useState(
-    Array.from({ length: orderReducer.orders.length }, () => "1")
+    Array.from({ length: showOrderReducer.length }, () => "1")
   );
   const handleSelectChange = (event, item, idx) => {
     const newSelectedOptions = [...selectedOptions];
@@ -32,42 +33,17 @@ export default function SendStream() {
   };
   const handleOrder = async () => {
     const res = await orderService(orderReducer.orders);
+    setShowOrderReducer([]);
+    localStorage.setItem("orderReducer", JSON.stringify([]));
+    dispatch(setOrders(orderReducer.orders));
+    dispatch(delAll([]));
     console.log(res);
+    alert("Đơn đã đặt");
   };
-  // return (
-  //     <div>
-  //         {orderReducer.orders.map((item, idx) => {
-  //             return (
-  //                 <div key={idx} className="flex items-center">
-  //                     <button type="button" className="mr-[10px]" onClick={() => handleDelete(item.id)}>
-  //                         Delete
-  //                     </button>
-  //                     <Image
-  //                         src={item.picture}
-  //                         alt="Description of image"
-  //                         width={100}
-  //                         height={100}
-  //                         className="mr-[10px]"
-  //                     />
-  //                     <h1 className="mr-[10px]">{item.name}</h1>
-  //                     <h1 className="mr-[10px]">Price: {item.price}</h1>
-  //                     <select value={Number(selectedOptions[idx])} onChange={(event) => handleSelectChange(event, item, idx)}>
-  //                         <option value="1">1</option>
-  //                         <option value="2">2</option>
-  //                         <option value="3">3</option>
-  //                     </select>
-  //                     <h1>Total: {item.total}</h1>
-  //                 </div>
-  //             )
-  //         })}
-  //         <h1>Tổng đơn: {orderReducer.orders.reduce((total, item) => total + Number(item.total), 0)}
-  //         </h1>
-  //         <button type="button" onClick={handleOrder}>Đặt hàng</button>
-  //     </div>
-  // )
+
   return (
     <div className="bg-pink-100 p-6">
-      {orderReducer.orders.map((item, idx) => {
+      {showOrderReducer.map((item, idx) => {
         return (
           <div key={idx} className="flex items-center mb-4">
             <button
@@ -103,7 +79,7 @@ export default function SendStream() {
       })}
       <h1 className="font-bold text-pink-500 text-lg mt-6">
         Tổng đơn:{" "}
-        {orderReducer.orders.reduce(
+        {showOrderReducer.reduce(
           (total, item) => total + Number(item.total),
           0
         )}
